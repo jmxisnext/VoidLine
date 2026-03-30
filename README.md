@@ -2,7 +2,7 @@
 
 **Possibility Field Engine**
 
-A constraint-driven negative-space engine that models how live pressure removes available possibility from a continuous spatial field, then projects the surviving space onto authored corridors for interpretable viability analysis.
+A constraint-driven negative-space engine that models how live pressure removes available possibility from a continuous spatial field, evolves that pressure over time, and supports counterfactual replay to prove what would have changed if a single constraint were different.
 
 ---
 
@@ -28,6 +28,7 @@ At any moment, VoidLine answers:
 - Where is it located?
 - What removed the rest, and why?
 - How does that change when a constraint expires or appears?
+- What would have been different if one constraint had not changed?
 
 ---
 
@@ -76,6 +77,17 @@ t=1.2s
   pocket_pass      viability=100%
 ```
 
+### Counterfactual: What If the Help Defender Had Not Rotated?
+
+Fork the baseline at t=0. Replace `help_defender_paint` (expires t=1.2) with a sustained version that never expires. Rerun the engine over the same timestamps.
+
+- **Baseline:** help expires at t=1.2, pressure drops, `drive_left` reopens to 97% viability
+- **Replay:** help persists, pressure stays higher, `drive_left` remains degraded
+- **First divergence:** occurs at the baseline expiration point (~t=1.2)
+- **Summary:** `drive_left` is the most affected corridor; field pressure stays 20+ percentage points higher in the replay
+
+The replay system compares aligned timelines at four levels: field volume, space pressure, corridor viability, and event stream. It identifies the first tick where the two timelines diverge and attributes the divergence to specific constraint changes.
+
 ---
 
 ## Architecture
@@ -88,11 +100,20 @@ Core (the product):
 
 Consumer (downstream of core):
     rail/           authored topology, corridor viability projection
+    engine/         tick loop — time-evolving constraint fields, event detection
+    replay/         single-fork counterfactual with aligned divergence analysis
     agents/         archetypes score over surviving space (planned)
     memory/         envelope-keyed tabular memory (planned)
-    engine/         tick loop orchestrator (planned)
-    replay/         counterfactual via constraint diff (planned)
 ```
+
+---
+
+## Milestones
+
+| Tag | What it contains |
+|---|---|
+| **v0.1.0-foundation** | Field, constraints, envelope, rail viability, PNR scenario |
+| **v0.2.0-temporal-replay** | Tick engine, event detection, replay, aligned divergence analysis |
 
 ---
 
@@ -104,17 +125,19 @@ Consumer (downstream of core):
 - `FieldDiff` — counterfactual comparison via removed/reopened space
 - `RailGraph` — JSON-schema-validated topology loader with node types and role filtering
 - `CorridorViability` — sampling-based projection of negative space onto corridor geometry with per-constraint blocker attribution
+- `TickEngine` — advances time in discrete steps, recomputes field and viabilities each tick, emits events when constraints expire/activate or corridors open/collapse
+- `replay_from_tick()` — forks a baseline timeline at one tick, applies constraint changes with deterministic precedence, reruns at exact baseline timestamps, compares aligned timelines at field/corridor/event level
+- `ConstraintChanges` — remove/add/replace with explicit precedence rules and collision detection
+- `ReplayResult` — per-tick divergence records, first divergence index and timestamp, aggregate summary with max corridor deltas
 - PNR scenario (`scenarios/pnr_basic.json`) — 7 nodes, 7 edges, 5 reads off the screen point
-- 29 tests passing
+- 72 tests passing
 
 ## Not Yet Implemented
 
 - Agent archetypes responding differently to the same surviving space
 - Envelope-signature-keyed memory (compact fingerprint of possibility geometry)
-- Tick loop with time-evolving constraint fields
-- Counterfactual replay (snapshot at junction, branch, compare via `FieldDiff`)
 
-These are designed but intentionally deferred until the core is proven.
+These are designed but intentionally deferred until the engine is proven.
 
 ---
 
@@ -152,3 +175,4 @@ Matches [ISO4D](https://github.com/jmxisnext) convention:
 - **Constraints compose via union.** Adding constraints reduces possibility — it doesn't increase computational complexity.
 - **Attribution over aggregation.** Every removal is named, sourced, and measured.
 - **Deterministic and inspectable.** Same inputs, same field. Every corridor viability can be traced to specific constraint boundaries.
+- **Replay proves causation.** Aligned divergence analysis shows exactly where and why two timelines split.
