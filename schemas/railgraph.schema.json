@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "voidline/railgraph",
+  "title": "VoidLine RailGraph",
+  "description": "Authored topology for the possibility field engine. Nodes are positions or decision junctions. Edges are corridors with physical court geometry. The rail is scaffold — negative space is the product.",
+  "type": "object",
+  "required": ["meta", "nodes", "edges"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "description": { "type": "string" },
+        "coordinate_system": {
+          "type": "string",
+          "description": "Must be iso4d — origin at basket center, units in feet.",
+          "const": "iso4d"
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["start", "junction", "terminal", "waypoint"]
+          },
+          "position": {
+            "type": "array",
+            "items": { "type": "number" },
+            "minItems": 2,
+            "maxItems": 3,
+            "description": "[x_ft, y_ft] or [x_ft, y_ft, z_ft] from basket center."
+          },
+          "roles_allowed": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "If set, only agents in these roles can occupy this node."
+          },
+          "metadata": { "type": "object" }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "from", "to", "corridor"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string" },
+          "from": { "type": "string", "description": "Source node id." },
+          "to": { "type": "string", "description": "Target node id." },
+          "corridor": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "minItems": 2,
+            "description": "Polyline of [x_ft, y_ft] waypoints defining the corridor centerline."
+          },
+          "corridor_width": {
+            "type": "number",
+            "description": "Half-width in feet from centerline. Default 1.5.",
+            "default": 1.5
+          },
+          "nominal_duration": {
+            "type": "number",
+            "description": "Expected traversal time in seconds."
+          },
+          "capacity": {
+            "type": "integer",
+            "description": "Max agents on this edge simultaneously.",
+            "default": 1
+          },
+          "roles_allowed": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "action_type": {
+            "type": "string",
+            "description": "Semantic label for the action this edge represents.",
+            "examples": ["drive", "pass", "cut", "screen", "reset", "relocate"]
+          },
+          "metadata": { "type": "object" }
+        }
+      }
+    }
+  }
+}

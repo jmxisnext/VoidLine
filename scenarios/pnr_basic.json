@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "name": "pnr_basic",
+    "version": "1.0",
+    "description": "Pick-and-roll from top of key. Ball handler faces left shade, help in paint, screen arriving from right. Three corridors diverge at the decision junction.",
+    "coordinate_system": "iso4d"
+  },
+  "nodes": [
+    {
+      "id": "top_key",
+      "type": "start",
+      "position": [-20.0, 0.0],
+      "metadata": {"label": "Top of key — PG with ball"}
+    },
+    {
+      "id": "screen_point",
+      "type": "junction",
+      "position": [-16.0, 4.0],
+      "roles_allowed": ["ball_handler"],
+      "metadata": {"label": "Screen arrival — PNR decision point"}
+    },
+    {
+      "id": "rim",
+      "type": "terminal",
+      "position": [0.0, 0.0],
+      "metadata": {"label": "Rim — drive finishes here"}
+    },
+    {
+      "id": "right_elbow",
+      "type": "terminal",
+      "position": [-15.0, 8.0],
+      "metadata": {"label": "Right elbow — pull-up zone"}
+    },
+    {
+      "id": "left_wing",
+      "type": "terminal",
+      "position": [-20.0, -12.0],
+      "metadata": {"label": "Left wing — reset / swing pass"}
+    },
+    {
+      "id": "corner_3",
+      "type": "terminal",
+      "position": [-3.0, 22.0],
+      "metadata": {"label": "Right corner 3 — kick-out target"}
+    },
+    {
+      "id": "roll_pocket",
+      "type": "junction",
+      "position": [-8.0, 3.0],
+      "roles_allowed": ["ball_handler", "roll_man"],
+      "metadata": {"label": "Roll pocket — screener dives here"}
+    }
+  ],
+  "edges": [
+    {
+      "id": "approach",
+      "from": "top_key",
+      "to": "screen_point",
+      "corridor": [[-20.0, 0.0], [-18.0, 1.5], [-16.0, 4.0]],
+      "corridor_width": 1.5,
+      "nominal_duration": 0.8,
+      "action_type": "drive",
+      "metadata": {"phase": "approach"}
+    },
+    {
+      "id": "drive_left",
+      "from": "screen_point",
+      "to": "rim",
+      "corridor": [[-16.0, 4.0], [-12.0, 3.0], [-6.0, 1.5], [0.0, 0.0]],
+      "corridor_width": 1.5,
+      "nominal_duration": 1.4,
+      "roles_allowed": ["ball_handler"],
+      "action_type": "drive",
+      "metadata": {"reads": "downhill attack off screen"}
+    },
+    {
+      "id": "pullup_right",
+      "from": "screen_point",
+      "to": "right_elbow",
+      "corridor": [[-16.0, 4.0], [-15.5, 6.0], [-15.0, 8.0]],
+      "corridor_width": 1.0,
+      "nominal_duration": 0.6,
+      "roles_allowed": ["ball_handler"],
+      "action_type": "drive",
+      "metadata": {"reads": "reject screen, pull-up"}
+    },
+    {
+      "id": "reset_left",
+      "from": "screen_point",
+      "to": "left_wing",
+      "corridor": [[-16.0, 4.0], [-18.0, 0.0], [-20.0, -6.0], [-20.0, -12.0]],
+      "corridor_width": 2.0,
+      "nominal_duration": 1.2,
+      "action_type": "reset",
+      "metadata": {"reads": "nothing there, swing reset"}
+    },
+    {
+      "id": "kick_corner",
+      "from": "screen_point",
+      "to": "corner_3",
+      "corridor": [[-16.0, 4.0], [-10.0, 12.0], [-3.0, 22.0]],
+      "corridor_width": 1.0,
+      "nominal_duration": 0.5,
+      "roles_allowed": ["ball_handler"],
+      "action_type": "pass",
+      "metadata": {"reads": "skip pass to corner shooter"}
+    },
+    {
+      "id": "pocket_pass",
+      "from": "screen_point",
+      "to": "roll_pocket",
+      "corridor": [[-16.0, 4.0], [-12.0, 3.5], [-8.0, 3.0]],
+      "corridor_width": 1.2,
+      "nominal_duration": 0.4,
+      "roles_allowed": ["ball_handler"],
+      "action_type": "pass",
+      "metadata": {"reads": "hit the roller in the pocket"}
+    },
+    {
+      "id": "roll_to_rim",
+      "from": "roll_pocket",
+      "to": "rim",
+      "corridor": [[-8.0, 3.0], [-4.0, 1.5], [0.0, 0.0]],
+      "corridor_width": 1.5,
+      "nominal_duration": 0.8,
+      "roles_allowed": ["roll_man"],
+      "action_type": "drive",
+      "metadata": {"reads": "roller finishes at rim"}
+    }
+  ]
+}
