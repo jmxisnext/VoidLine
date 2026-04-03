@@ -26,7 +26,7 @@ VoidLine makes this removal explicit: each constraint is named, sourced, measure
 
 ## Project Summary (Short)
 
-> Constraint-driven possibility field engine for sports gameplay AI. Models how defensive pressure, kinematic commitment, and perceptual limits remove available actions from an agent's space. Supports counterfactual replay — proving that one help defender's rotation creates a 20% pressure swing and opens a driving lane. Validated across two play topologies with 105 tests.
+> Constraint-driven possibility field engine for sports gameplay AI. Models how defensive pressure, kinematic commitment, and perceptual limits remove available actions from an agent's space. Supports counterfactual replay — proving that one help defender's rotation creates a 20% pressure swing and opens a driving lane. Validated across two play topologies with 122 tests.
 
 ## Why This Matters to Sports Gameplay AI
 

@@ -26,7 +26,7 @@ A constraint-driven possibility field engine that models how defensive pressure,
 
 ### Test coverage
 
-105 tests, all passing (<1s).
+122 tests, all passing (<1s).
 
 ## What Was Proven
 
@@ -59,6 +59,9 @@ Same play, one variable changed. 20% pressure swing, driving lane opens or stays
 | `src/replay/` | Fork, compare, models, report |
 | `scenarios/pnr_basic.json` | PNR scenario definition |
 | `scenarios/transition_3on2.json` | Transition scenario definition |
+| `adapter/constraint_generator.py` | Cross-anchor bridge (ISO4D → VoidLine constraints) |
+| `examples/help_defender_replay.py` | PNR counterfactual replay script |
+| `examples/transition_replay.py` | Transition counterfactual replay script |
 | `demo_runner.py` | Terminal demo output |
 | `visualize_hero.py` | Hero figures (court + pressure timeline) |
 | `help_defender_flip.png` | Two-panel court comparison |
@@ -86,7 +89,7 @@ Same play, one variable changed. 20% pressure swing, driving lane opens or stays
 
 ```bash
 cd J:/projects/VoidLine
-python -m pytest tests/ -v           # 105 tests
+python -m pytest tests/ -v           # 122 tests
 python demo_runner.py                # PNR scenario demo
 python visualize_hero.py             # regenerate figures
 ```

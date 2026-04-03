@@ -91,7 +91,7 @@ The two scenarios prove the engine generalizes across topology shape, temporal p
 ## Run
 
 ```bash
-python -m pytest tests/ -v           # 105 tests
+python -m pytest tests/ -v           # 122 tests
 python demo_runner.py                # print PNR scenario table
 python visualize_hero.py             # generate hero figures
 python -m examples.help_defender_replay    # counterfactual replay report
@@ -109,7 +109,9 @@ python -m examples.transition_replay       # transition scenario replay
 | `src/rail/` | Topology loader, corridor viability projection |
 | `src/replay/` | Counterfactual fork, timeline comparison, report generation |
 | `scenarios/` | PNR and transition scenario definitions (JSON) |
+| `adapter/` | Cross-anchor bridge (constraint generator for stack integration) |
+| `examples/` | Runnable replay scripts (help defender flip, transition) |
 | `demo_runner.py` | Clean terminal demo of PNR scenario |
 | `visualize_hero.py` | Two-panel court view + pressure timeline |
 
-This is the first executable slice of Anchor 2 (Voidline — Feasibility) in a broader portfolio of gameplay AI simulation systems. It connects to [Decision Window Engine](../decision_window), which evaluates whether a specific action remains viable through execution time. VoidLine provides the feasibility space that informs which actions are worth evaluating.
+This is the first executable slice of Anchor 2 (Voidline — Feasibility) in a broader portfolio of gameplay AI simulation systems. It connects to the Decision Window Engine, which evaluates whether a specific action remains viable through execution time. VoidLine provides the feasibility space that informs which actions are worth evaluating.
