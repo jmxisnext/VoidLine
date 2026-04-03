@@ -24,6 +24,11 @@ coverage.xml
 # --- Secrets / config ---
 .env
 *.env
+*.pem
+*.key
+*.p12
+credentials*
+secrets*
 config/local_*.py
 
 # --- Output (all generated artifacts) ---
