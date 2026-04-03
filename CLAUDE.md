@@ -8,7 +8,7 @@ Models what actions are impossible under defensive pressure, kinematic commitmen
 
 ## Current Milestone
 
-v0.3.0 complete. Core engine, 2 validated scenarios, presentation layer, 105 tests. See `docs/checkpoints/CHECKPOINT_v0_3_voidline.md`.
+v0.3.0 complete. Core engine, 2 validated scenarios, presentation layer, 122 tests. See `docs/checkpoints/CHECKPOINT_v0_3_voidline.md`.
 
 ## Session Start
 
@@ -27,7 +27,7 @@ v0.3.0 complete. Core engine, 2 validated scenarios, presentation layer, 105 tes
 ## Run / Test
 
 ```bash
-python -m pytest tests/ -v             # 105 tests, <1s
+python -m pytest tests/ -v             # 122 tests, <1s
 python demo_runner.py                  # PNR scenario terminal demo
 python visualize_hero.py               # regenerate hero figures
 ```
