@@ -4,6 +4,8 @@
 
 Sports game AI typically evaluates what an agent *should* do. VoidLine models what an agent *can no longer do*, and what removed it. The product is not a decision — it's the shape of surviving possibility after defensive pressure, kinematic commitment, perceptual limits, and rules have carved away the rest.
 
+**Anchor boundary:** This module is responsible ONLY for feasibility modeling (what actions are possible under constraints). It does NOT perform state extraction or execution timing — those belong to ISO4D and Decision Window respectively.
+
 ## The Core Problem
 
 In gameplay AI, the difference between a good and bad decision often comes down to one defender rotating one step. But most systems don't model that rotation as a constraint that removes space — they model it as a position update and hope the decision logic catches up.
