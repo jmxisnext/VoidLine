@@ -100,8 +100,8 @@ python visualize_hero.py             # regenerate figures
 
 ### What was added
 
-- **Defensive scheme engine** (`adapter/scheme.py`): generates defender entities from offensive state + scheme rules. Three schemes: drop, ice, help_heavy. Three archetypes: on-ball defender, help defender, rim protector.
-- **End-to-end integration** (`integration_iso3.py`): loads ISO4D extraction artifact, transforms coordinates (ui_halfcourt_normalized -> ISO4D feet), injects scheme-driven defenders, evaluates per-frame constraints and fields, compares normal vs +300ms delayed reads across schemes.
+- **Scheme Engine** (`adapter/scheme.py`): generates defender entities from offensive state + scheme rules. Three schemes: drop, ice, help_heavy. Three archetypes: on-ball defender, help defender, rim protector. Ball-relative positioning with per-scheme reaction delay.
+- **VoidLine integration** (`integration_iso3.py`): loads ISO4D extraction, transforms coordinates (ui_halfcourt_normalized -> ISO4D feet), injects scheme defenders, evaluates per-frame constraint fields, compares normal vs +300ms delayed reads across schemes.
 
 ### What was proven
 
@@ -111,25 +111,29 @@ python visualize_hero.py             # regenerate figures
 | ice | 30.0% | +26.4% | D1_onball + tighter deny-middle positioning |
 | help_heavy | 36.1% | +32.6% | D1_onball + D2_help (gap help at 8.5ft) |
 
-1. **Scheme differentiates behavior**: drop < ice < help_heavy in both peak pressure and delay sensitivity.
-2. **Help defender only activates when scheme says it should**: D2_help within range only in help_heavy.
-3. **Rim protector behaves as corridor/viability actor**: D3 at 33ft from wing PG — correct basketball, impact shows in corridor analysis not field pressure.
-4. **Static offensive entities stay quiet**: SF contributes 0.6% volume, never dominates.
-5. **Delay sensitivity scales with scheme aggressiveness**: more constraints in play = stale reads compound more.
+1. **Scheme differentiates behavior.** drop < ice < help_heavy in both peak pressure and delay sensitivity.
+2. **Help defender activates only when scheme demands it.** D2_help enters the 15ft constraint radius only in help_heavy — drop and ice keep help at 18-20ft.
+3. **Rim protector contributes to corridor denial, not field pressure.** D3 at 33ft from a wing ball handler is correct basketball — its impact belongs in corridor viability analysis, not direct pressure.
+4. **Static entities stay quiet.** Offensive SF contributes 0.6% volume, never dominates.
+5. **Delay sensitivity scales with scheme aggressiveness.** More active constraints = stale reads compound more.
 
-### Architecture validated
+### Architecture
 
 ```
-ISO4D (offense extraction) + Scheme Engine (defense generation)
-    -> adapter.constraints_from_extraction (unchanged)
-    -> VoidLine engine (unchanged)
+ISO4D          ->  state (positions, velocities from video)
+Scheme Engine  ->  defense (generated from offensive state + scheme rules)
+VoidLine       ->  pressure field (constraint removal, corridor viability)
 ```
 
-Offense from extraction. Defense from scheme logic. This is the correct architecture.
+The Scheme Engine is a distinct layer — it consumes offensive state and produces defensive entities, which VoidLine then evaluates as constraints. Offense from extraction. Defense from scheme logic.
+
+### Cross-anchor integration (completed)
+
+Decision Window integration validated in the DecisionWindow repo (`integration_voidline.py`). Pass viability evaluated under all three schemes with delay sweep. Key result: ice kills the pass spatially, drop allows it up to 200ms delay, help_heavy allows it up to 100ms. See DecisionWindow checkpoint v0.2.1.
 
 ## Next Steps (When Resuming)
 
-1. Cross-anchor portfolio alignment (link VoidLine + Decision Window)
-2. TickEngine integration with scheme defenders (corridor viability under scheme pressure)
-3. Optionally: agent archetypes (first consumer of the possibility field)
-4. Optionally: moving constraint boundaries
+1. Portfolio packaging: one diagram, one comparison table, one sentence across all repos
+2. README updates across repos to reflect full pipeline
+3. TickEngine integration with scheme defenders (corridor viability under scheme pressure)
+4. Optionally: agent archetypes (first consumer of the possibility field)
