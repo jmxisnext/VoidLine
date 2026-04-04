@@ -109,8 +109,10 @@ python -m examples.transition_replay       # transition scenario replay
 | `src/rail/` | Topology loader, corridor viability projection |
 | `src/replay/` | Counterfactual fork, timeline comparison, report generation |
 | `scenarios/` | PNR and transition scenario definitions (JSON) |
-| `adapter/` | Cross-anchor bridge (constraint generator for stack integration) |
+| `adapter/` | Cross-anchor bridge: constraint generator + scheme engine |
+| `adapter/scheme.py` | Defensive scheme engine (drop, ice, help_heavy) |
 | `examples/` | Runnable replay scripts (help defender flip, transition) |
+| `integration_iso3.py` | End-to-end integration (ISO4D -> scheme defense -> VoidLine) |
 | `demo_runner.py` | Clean terminal demo of PNR scenario |
 | `visualize_hero.py` | Two-panel court view + pressure timeline |
 

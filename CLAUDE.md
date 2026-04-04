@@ -8,7 +8,7 @@ Models what actions are impossible under defensive pressure, kinematic commitmen
 
 ## Current Milestone
 
-v0.3.0 complete. Core engine, 2 validated scenarios, presentation layer, 122 tests. See `docs/checkpoints/CHECKPOINT_v0_3_voidline.md`.
+v0.3.1 complete. Core engine, 2 validated scenarios, scheme-driven defense integration, 122 tests. See `docs/checkpoints/CHECKPOINT_v0_3_voidline.md`.
 
 ## Session Start
 
@@ -42,11 +42,13 @@ python visualize_hero.py               # regenerate hero figures
 | `src/engine/` | Tick loop, event detection |
 | `src/rail/` | Topology loader, corridor viability |
 | `src/replay/` | Counterfactual fork, compare, report |
-| `adapter/` | Cross-anchor bridge (constraint generator for stack integration) |
+| `adapter/` | Cross-anchor bridge: constraint generator + scheme engine |
+| `adapter/scheme.py` | Defensive scheme engine (drop, ice, help_heavy) |
 | `scenarios/` | JSON scenario definitions |
 | `schemas/` | JSON schema validation |
 | `tests/` | Test suite |
 | `docs/checkpoints/` | Milestone checkpoints |
+| `integration_iso3.py` | End-to-end integration demo (ISO4D -> scheme defense -> VoidLine) |
 
 ## Anchor Boundary
 
