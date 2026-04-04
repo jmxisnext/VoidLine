@@ -41,7 +41,7 @@ def compute_boundary_volume(
         # Approximate cone as a circular sector.
         # Effective reach defaults to 10 ft if not inferrable.
         reach = 10.0
-        sector_fraction = boundary.half_angle_deg / 180.0
+        sector_fraction = (2 * boundary.half_angle_deg) / 360.0
         area = math.pi * reach ** 2 * sector_fraction
         return min(1.0, area / court_area)
 

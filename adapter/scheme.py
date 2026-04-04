@@ -283,8 +283,10 @@ def _positions_to_frames(
         t = reference_frames[i]["t"]
         x, y = positions[i]
 
-        # Central difference velocity
-        if i == 0:
+        # Central difference velocity (forward/backward at edges)
+        if n == 1:
+            vx = vy = 0.0
+        elif i == 0:
             dt = reference_frames[1]["t"] - reference_frames[0]["t"]
             vx = (positions[1][0] - positions[0][0]) / dt
             vy = (positions[1][1] - positions[0][1]) / dt
