@@ -4,6 +4,53 @@
 
 Sports game AI typically evaluates what an agent *should* do. VoidLine models what an agent *can no longer do*, and what removed it. The product is not a decision — it's the shape of surviving possibility after defensive pressure, kinematic commitment, perceptual limits, and rules have carved away the rest.
 
+## Quick Start
+
+```bash
+git clone <repo-url>
+cd VoidLine
+pip install -r requirements.txt
+python demo_runner.py
+```
+
+Expected output:
+
+```
+======================================================================
+  VoidLine v0.3 — PNR Scenario Demo
+======================================================================
+
+  Active Constraints at t=0.0
+  ---------------------------
+    onball_defender_left_shade       source=opponent   vol= 25%  [sustained]
+    help_defender_paint              source=opponent   vol= 20%  [transient]
+    shot_clock_14s                   source=rules      vol=  5%  [decaying]
+    rightward_momentum               source=self       vol= 15%  [transient]
+    screen_not_yet_set               source=rules      vol= 10%  [transient]
+    weak_side_blind_spot             source=perception vol=  8%  [sustained]
+    contested_pullup                 source=risk       vol=  7%  [sustained]
+
+    Space pressure: 90%
+    Surviving volume: 10%
+
+  Counterfactual: What If Help Defender Stays?
+  --------------------------------------------
+    First divergence: t=1.2s
+
+    Time           Baseline   Help Stays      Delta
+    --------------------------------------------
+    t=1.2            45%          65% +      20% <-- diverges
+    t=1.5            45%          65% +      20%
+
+    drive_left at t=1.5s:
+      Baseline (help rotates): 97%
+      Replay (help stays):     86%
+```
+
+One defender's rotation changes pressure by 20 percentage points. The counterfactual replay proves it causally, not just descriptively.
+
+---
+
 **Anchor boundary:** This module is responsible ONLY for feasibility modeling (what actions are possible under constraints). It does NOT perform state extraction or execution timing — those belong to ISO4D and Decision Window respectively.
 
 ## The Core Problem
@@ -116,4 +163,34 @@ python -m examples.transition_replay       # transition scenario replay
 | `demo_runner.py` | Clean terminal demo of PNR scenario |
 | `visualize_hero.py` | Two-panel court view + pressure timeline |
 
-This is the first executable slice of Anchor 2 (Voidline — Feasibility) in a broader portfolio of gameplay AI simulation systems. It connects to the Decision Window Engine, which evaluates whether a specific action remains viable through execution time. VoidLine provides the feasibility space that informs which actions are worth evaluating.
+## Cross-Anchor Integration
+
+VoidLine is the feasibility layer of a three-part gameplay AI decision stack:
+
+```
+ISO4D                     VoidLine                    Decision Window
+video -> positions ->     schemes -> pressure ->      delays -> viability
+(what is happening)       (what is allowed)           (what will still work)
+```
+
+**Defensive scheme determines baseline viability; animation delay determines when it dies.**
+
+The full pipeline runs on a single extracted game state — ISO4D positions feed VoidLine scheme-driven defense, which feeds Decision Window timing evaluation:
+
+```
+Pass viability: PG -> SG at t=1.5s
+
+              0ms      100ms     200ms     300ms
+drop          OPEN     OPEN      DEAD      DEAD
+ice           DEAD     DEAD      DEAD      DEAD
+help_heavy    OPEN     DEAD      DEAD      DEAD
+```
+
+Ice kills the pass at any speed (deny-middle positioning). Drop allows it up to 200ms of animation delay. Help-heavy's tight gap help means even 100ms is fatal.
+
+Run the full pipeline from the [Decision Window](../decision_window) repo:
+
+```bash
+cd ../decision_window
+python integration_voidline.py
+```
