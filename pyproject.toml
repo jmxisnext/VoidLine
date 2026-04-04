@@ -1,6 +1,6 @@
 [project]
 name = "voidline"
-version = "0.1.0"
+version = "0.3.1"
 description = "Constraint-driven negative-space engine — models how live pressure removes available possibility"
 readme = "README.md"
 requires-python = ">=3.11"

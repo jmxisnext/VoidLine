@@ -113,7 +113,7 @@ The counterfactual system forks the timeline at any tick, applies a constraint c
 
 | | PNR (Pick-and-Roll) | Transition (3-on-2) |
 |---|---|---|
-| Topology | Star (1 junction, 5 corridors) | Cascading (2 sequential junctions) |
+| Topology | Star (decision junction with 5 corridors) | Cascading (2 sequential junctions) |
 | Pressure shape | Monotonic decrease (constraints expire) | Non-monotonic (drops then rises) |
 | Key event | Help defender rotates out at t=1.2s | Recovering defender arrives at t=1.0s |
 | Counterfactual | "What if help hadn't rotated?" | "What if recovering defender hadn't arrived?" |

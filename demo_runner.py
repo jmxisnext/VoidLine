@@ -54,7 +54,7 @@ def main():
     # ── Header ──
     print()
     print("=" * 70)
-    print("  VoidLine v0.3 — PNR Scenario Demo")
+    print("  VoidLine v0.3.1 — PNR Scenario Demo")
     print("=" * 70)
 
     # ── 1. Constraint overview ──
