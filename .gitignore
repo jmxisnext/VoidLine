@@ -42,6 +42,8 @@ output/
 
 # --- Claude Code ---
 .claude/
+CLAUDE.md
+docs/SAD.md
 
 # --- OS ---
 .DS_Store
